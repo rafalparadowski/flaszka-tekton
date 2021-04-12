@@ -1,0 +1,9 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: hello-codi
+spec:
+  type: image
+  params:
+    - name: url
+      value: codilimerafalparadowski/nginx-test
