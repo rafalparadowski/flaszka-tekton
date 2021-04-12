@@ -14,7 +14,6 @@ spec:
         The build context used by Kaniko
         (https://github.com/GoogleContainerTools/kaniko#kaniko-build-contexts)
       default: $(resources.inputs.docker-source.path)
-    - name: 
   resources:
     inputs:
       - name: docker-source
@@ -35,7 +34,3 @@ spec:
         - --dockerfile=$(params.pathToDockerFile)
         - --destination=$(resources.outputs.builtImage.url)
         - --context=$(params.pathToContext)
-      volumes:
-        - name: "$(params.volumeName)"
-          configMap:
-            name: "$(params.docker-login)"

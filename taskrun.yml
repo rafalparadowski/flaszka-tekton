@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: hello-run
+spec:
+  serviceAccountName: docker-hub
+  taskRef:
+    name: build-image-from-git
+  params:
+    - name: pathToDockerFile
+      value: Dockerfile
+    - name: pathToContext
+      value: $(resources.inputs.docker-source.path)/image
+  resources:
+    inputs:
+      - name: docker-source
+        resourceRef:
+          name: demo-repo
+    outputs:
+      - name: builtImage
+        resourceRef:
+          name: hello-codi

@@ -6,4 +6,4 @@ spec:
   type: image
   params:
     - name: url
-      value: codilimerafalparadowski/nginx-test
+      value: index.docker.io/codilimerafalparadowski/nginx-test:1.0.0
