@@ -1,0 +1,34 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: deploy-application
+spec:
+  resources:
+    inputs:
+      - name: docker-source
+        type: git
+      - name: builtImage
+        type: image
+  params:
+      - name: pathToContext
+        description: The path to the build context, used by Kaniko - within the workspace
+        default: .
+      - name: pathToYamlFile
+        description: The path to the yaml file to deploy within the git source
+        default: deploy.yaml
+  steps:
+    - name: update-yaml
+      image: alpine
+      command: ["sed"]
+      args:
+        - "-i"
+        - "-e"
+        - "s;IMAGE;$(resources.inputs.builtImage.url);g"
+        - "$(resources.inputs.docker-source.path)/$(params.pathToContext)/$(params.pathToYamlFile)"
+    - name: deploy-app
+      image: lachlanevenson/k8s-kubectl
+      command: ["kubectl"]
+      args:
+        - "apply"
+        - "-f"
+        - "$(resources.inputs.docker-source.path)/$(params.pathToContext)/$(params.pathToYamlFile)"

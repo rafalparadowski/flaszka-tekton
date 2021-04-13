@@ -1,0 +1,48 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: application-pipeline
+spec:
+  resources:
+    - name: docker-source
+      type: git
+    - name: builtImage
+      type: image
+  params:
+    - name: pathToDockerFile
+      default: Dockerfile
+    - name: pathToYamlFile
+      description: The path to the yaml file to deploy within the git source
+      default: deploy.yaml
+  tasks:
+  - name: build-image-from-git
+    taskRef:
+      name: build-image-from-git
+    params:
+      - name: pathToDockerFile
+        value: Dockerfile
+      - name: pathToContext
+        value: "$(resources.inputs.docker-source.path)/image"
+    resources:
+      inputs:
+        - name: docker-source
+          resource: docker-source
+      outputs:
+        - name: builtImage
+          resource: builtImage
+  - name: deploy-application
+    taskRef:
+      name: deploy-application
+    runAfter:
+      - build-image-from-git
+    params:
+      - name: pathToContext
+        value: "$(resources.inputs.docker-source.path)/image" 
+      - name: pathToYamlFile
+        value: "$(params.pathToYamlFile)"
+    resources:
+      inputs:
+        - name: docker-source
+          resource: docker-source
+        - name: builtImage
+          resource: builtImage
