@@ -14,5 +14,5 @@ spec:
           name: hello-codi
   params:
     - name: pathToYamlFile
-      value: "deploy.yaml"
+      value: "deploy.yml"
   serviceAccountName: service-account

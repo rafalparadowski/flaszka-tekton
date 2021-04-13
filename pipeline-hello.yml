@@ -37,7 +37,7 @@ spec:
       - build-image-from-git
     params:
       - name: pathToContext
-        value: "$(resources.inputs.docker-source.path)/image" 
+        value: image 
       - name: pathToYamlFile
         value: "$(params.pathToYamlFile)"
     resources:
